@@ -1,0 +1,2 @@
+serviceClass: me.juggl.client.JugglService
+path: 80C3CA033BC49C72A7EAD9C6807F65DC.gwt.rpc
