@@ -13,13 +13,23 @@ public class WorkStreamTest {
 	@Test
 	public void construction() {
 		// Arrange
-		long timeBefore = System.currentTimeMillis();
-		WorkStream subject = new WorkStream("test name");
-		long timeAfter = System.currentTimeMillis();
+		WorkStream subject = new WorkStream();
 		
 		// Assert
-		assertEquals("test name", subject.getName());
-		assertTrue(subject.getLastUpdateTime() <= timeAfter && subject.getLastUpdateTime() >= timeBefore);
-		assertTrue(subject instanceof Serializable); // GWT requirement when sharing objects between client and server
+		assertNull(subject.getName());
+		assertTrue(subject instanceof Serializable); // GWT needs this pass objects between client and server.
+	}
+	
+	@Test
+	public void setName() {
+		// Arrange
+		String expected = "test name";
+		WorkStream subject = new WorkStream();
+		
+		// Act
+		subject.setName(expected);
+
+		// Assert
+		assertEquals(expected, subject.getName());
 	}
 }

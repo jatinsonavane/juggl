@@ -16,6 +16,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 @SuppressWarnings("serial")
 public class JugglServiceImpl extends RemoteServiceServlet implements JugglService {
 
+	// This map will be replaced by proper persistence
 	private Map<Long, WorkStream> workStreamMap = new HashMap<Long, WorkStream>();
 	private long counter = 0; // only written to pass a test. This should be forced out by persistence related tests
 	

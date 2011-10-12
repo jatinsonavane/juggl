@@ -46,7 +46,8 @@ public class JugglClient implements EntryPoint {
 			
 			private void addWorkStream() {
 				String name = workStreamNameField.getText();
-				WorkStream workStream = new WorkStream(name);
+				WorkStream workStream = new WorkStream();
+				workStream.setName(name);
 
 				addWorkStreamButton.setEnabled(false);
 

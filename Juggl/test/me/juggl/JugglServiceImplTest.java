@@ -1,32 +1,36 @@
 package me.juggl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import me.juggl.client.JugglService;
 import me.juggl.server.JugglServiceImpl;
 import me.juggl.shared.WorkStream;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public class JugglServiceImplTest {
 
+	private JugglServiceImpl subject;
+
+	@Before
+	public void testSetup() {
+		subject = new JugglServiceImpl();
+	}
+
 	@Test
 	public void defaultConstruction() {
-		// Arrange
-		JugglServiceImpl subject = new JugglServiceImpl();
-		
 		// Assert
 		assertTrue(subject instanceof JugglService);
 	}
-	
+
 	@Test
 	public void addWorkStream() {
 		// Arrange
-		WorkStream expected = new WorkStream("a test workstream");
-		JugglServiceImpl subject = new JugglServiceImpl();
+		WorkStream expected = getNewWorkStream("test"); 
 		
 		// Act
 		long id = subject.addWorkStream(expected);
@@ -38,25 +42,24 @@ public class JugglServiceImplTest {
 	@Test
 	public void getWorkStreams() {
 		// Arrange
-		JugglServiceImpl subject = new JugglServiceImpl();
-
-		List<WorkStream> expected = new ArrayList<WorkStream>();
-		
-		WorkStream one = new WorkStream("one");
-		WorkStream two = new WorkStream("two");
-		WorkStream thr = new WorkStream("thr");
+		WorkStream one = getNewWorkStream("one");
+		WorkStream two = getNewWorkStream("two");
 		
 		subject.addWorkStream(one);
-		expected.add(one);
 		subject.addWorkStream(two);
-		expected.add(two);
-		subject.addWorkStream(thr);
-		expected.add(thr);
 
 		// Act
 		List<WorkStream> actual = subject.getWorkStreams();
 
 		// Assert
-		assertEquals(expected, actual);
+		assertTrue(actual.size() == 2);
+		assertTrue(actual.contains(one));
+		assertTrue(actual.contains(two));		
+	}
+	
+	private WorkStream getNewWorkStream(String name) {
+		WorkStream workStream = new WorkStream();
+		workStream.setName(name);
+		return workStream;
 	}
 }
