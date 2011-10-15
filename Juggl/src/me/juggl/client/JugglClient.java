@@ -20,12 +20,14 @@ import com.google.gwt.user.client.ui.TextBox;
 
 public class JugglClient implements EntryPoint {
 
-	private final JugglServiceAsync jugglService = GWT.create(JugglService.class);
-	
+	private final JugglServiceAsync jugglService = GWT
+			.create(JugglService.class);
+	private final String ENTER_NEW_WORKSTREAM = "Enter new workstream";
+
 	@Override
 	public void onModuleLoad() {
 		final TextBox workStreamNameField = new TextBox();
-		workStreamNameField.setText("Enter new workstream");
+		workStreamNameField.setText(ENTER_NEW_WORKSTREAM);
 		final Button addWorkStreamButton = new Button("Add");
 
 		// This class needs to be local to this function because
@@ -41,9 +43,12 @@ public class JugglClient implements EntryPoint {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				addWorkStream();
+				if (event.getSource().equals(workStreamNameField))
+					workStreamNameField.selectAll();
+				else if (event.getSource().equals(addWorkStreamButton))
+					addWorkStream();
 			}
-			
+
 			private void addWorkStream() {
 				String name = workStreamNameField.getText();
 				WorkStream workStream = new WorkStream();
@@ -51,32 +56,41 @@ public class JugglClient implements EntryPoint {
 
 				addWorkStreamButton.setEnabled(false);
 
-				jugglService.addWorkStream(workStream, new AsyncCallback<Long>() {
+				jugglService.addWorkStream(workStream,
+						new AsyncCallback<Long>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						System.out.println("bah! failure in jugglService.addWorkStream()");
-						addWorkStreamButton.setEnabled(true);
-					}
+							@Override
+							public void onFailure(Throwable caught) {
+								System.out
+										.println("bah! failure in jugglService.addWorkStream()");
+								addWorkStreamButton.setEnabled(true);
+								workStreamNameField
+										.setText(ENTER_NEW_WORKSTREAM);
+							}
 
-					@Override
-					public void onSuccess(Long result) {
-						System.out.println("so this finally worked. id: " + result);
-						addWorkStreamButton.setEnabled(true);
-						refreshWorkStreams();
-					}
-					
-				});
+							@Override
+							public void onSuccess(Long result) {
+								System.out
+										.println("so this finally worked. id: "
+												+ result);
+								workStreamNameField
+										.setText(ENTER_NEW_WORKSTREAM);
+								addWorkStreamButton.setEnabled(true);
+								refreshWorkStreams();
+							}
+
+						});
 			}
 		}
-		
+
 		AddWorkStreamHandler addWorkStreamHandler = new AddWorkStreamHandler();
 		workStreamNameField.addKeyUpHandler(addWorkStreamHandler);
+		workStreamNameField.addClickHandler(addWorkStreamHandler);
 		addWorkStreamButton.addClickHandler(addWorkStreamHandler);
-		
+
 		RootPanel.get("workStreamNameContainer").add(workStreamNameField);
 		RootPanel.get("addWorkStreamButtonContainer").add(addWorkStreamButton);
-		
+
 		refreshWorkStreams();
 	}
 
@@ -86,25 +100,26 @@ public class JugglClient implements EntryPoint {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				System.out.println("couldn't refresh workstreams");				
+				System.out.println("couldn't refresh workstreams");
 			}
 
 			@Override
 			public void onSuccess(List<WorkStream> result) {
 
-				System.out.println("refreshed workstreams - got " + result.size());				
+				System.out.println("refreshed workstreams - got "
+						+ result.size());
 
 				HTMLTable table = new FlexTable();
 				int row = 0;
-				
+
 				for (WorkStream workStream : result) {
 					TextBox textBox = new TextBox();
 					textBox.setText(workStream.getName());
 					textBox.setEnabled(false);
-					
+
 					table.setWidget(row++, 0, textBox);
 				}
-				
+
 				RootPanel.get("workStreamListContainer").clear();
 				RootPanel.get("workStreamListContainer").add(table);
 			}
