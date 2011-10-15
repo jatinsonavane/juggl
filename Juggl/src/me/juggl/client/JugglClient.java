@@ -66,6 +66,7 @@ public class JugglClient implements EntryPoint {
 								addWorkStreamButton.setEnabled(true);
 								workStreamNameField
 										.setText(ENTER_NEW_WORKSTREAM);
+								workStreamNameField.selectAll();
 							}
 
 							@Override
@@ -75,6 +76,7 @@ public class JugglClient implements EntryPoint {
 												+ result);
 								workStreamNameField
 										.setText(ENTER_NEW_WORKSTREAM);
+								workStreamNameField.selectAll();
 								addWorkStreamButton.setEnabled(true);
 								refreshWorkStreams();
 							}
