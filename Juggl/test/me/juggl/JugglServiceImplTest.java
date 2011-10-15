@@ -1,65 +1,65 @@
 package me.juggl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import me.juggl.client.JugglService;
 import me.juggl.server.JugglServiceImpl;
 import me.juggl.shared.WorkStream;
 
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JMock;
+import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import com.googlecode.objectify.Objectify;
+
+@RunWith(JMock.class)
 public class JugglServiceImplTest {
+
+	Mockery context = new JUnit4Mockery();
+	final Objectify ofy = context.mock(Objectify.class);
 
 	private JugglServiceImpl subject;
 
 	@Before
-	public void testSetup() {
+	public void setUp() {
 		subject = new JugglServiceImpl();
-	}
-
-	@Test
-	public void defaultConstruction() {
-		// Assert
-		assertTrue(subject instanceof JugglService);
+		subject.setObjectify(ofy);
 	}
 
 	@Test
 	public void addWorkStream() {
 		// Arrange
-		WorkStream expected = getNewWorkStream("test"); 
-		
-		// Act
-		long id = subject.addWorkStream(expected);
+		final WorkStream workStream = new WorkStream();
 
-		// Assert
-		assertEquals(expected, subject.getWorkStream(id));
+		// i expect ofy.put to be called.
+		context.checking(new Expectations() {
+			{
+				oneOf(ofy).put(workStream);
+			}
+		});
+
+		// Act
+		subject.addWorkStream(workStream);
 	}
-	
+
 	@Test
 	public void getWorkStreams() {
 		// Arrange
-		WorkStream one = getNewWorkStream("one");
-		WorkStream two = getNewWorkStream("two");
-		
-		subject.addWorkStream(one);
-		subject.addWorkStream(two);
+		context.checking(new Expectations() {
+			{
+				oneOf(ofy).query(WorkStream.class).fetch();
+			}
+		});
 
 		// Act
 		List<WorkStream> actual = subject.getWorkStreams();
 
 		// Assert
-		assertTrue(actual.size() == 2);
-		assertTrue(actual.contains(one));
-		assertTrue(actual.contains(two));		
-	}
-	
-	private WorkStream getNewWorkStream(String name) {
-		WorkStream workStream = new WorkStream();
-		workStream.setName(name);
-		return workStream;
+		assertEquals(0, actual.size());
 	}
 }

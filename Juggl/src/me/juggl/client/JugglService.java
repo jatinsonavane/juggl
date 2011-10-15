@@ -13,9 +13,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("jugglservice")
 public interface JugglService extends RemoteService {
 
-	long addWorkStream(WorkStream workStream);
-	
-	WorkStream getWorkStream(long id);
-	
+	Long addWorkStream(WorkStream workStream);
+
 	List<WorkStream> getWorkStreams();
 }
