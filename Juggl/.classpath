@@ -5,6 +5,9 @@
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/objectify-3.0.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/hamcrest-core-1.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jmock-2.5.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jmock-junit4-2.5.1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JMock"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
