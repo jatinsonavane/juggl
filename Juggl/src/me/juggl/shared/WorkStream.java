@@ -24,4 +24,11 @@ public class WorkStream implements Serializable {
 	public Long getId() {
 		return id;
 	}
+
+	/*
+	 * only used in a unit test
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
 }

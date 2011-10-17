@@ -1,9 +1,8 @@
 package me.juggl;
 
 import static org.junit.Assert.assertEquals;
-
-import java.util.List;
-
+import me.juggl.server.DataAccessHelperImpl;
+import me.juggl.server.DataAccessHelper;
 import me.juggl.server.JugglServiceImpl;
 import me.juggl.shared.WorkStream;
 
@@ -15,20 +14,28 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.googlecode.objectify.Objectify;
-
 @RunWith(JMock.class)
 public class JugglServiceImplTest {
 
 	Mockery context = new JUnit4Mockery();
-	final Objectify ofy = context.mock(Objectify.class);
+	final DataAccessHelper helper = context.mock(DataAccessHelper.class);
 
 	private JugglServiceImpl subject;
 
 	@Before
 	public void setUp() {
 		subject = new JugglServiceImpl();
-		subject.setObjectify(ofy);
+		subject.setDataAccessHelper(helper);
+	}
+
+	@Test
+	public void defaultConstruction() {
+		// Arrange
+		JugglServiceImpl subject = new JugglServiceImpl(); // not using the
+															// setUp one.
+
+		// Assert
+		assertEquals(DataAccessHelperImpl.getInstance(), subject.getDataAccessHelper());
 	}
 
 	@Test
@@ -39,7 +46,7 @@ public class JugglServiceImplTest {
 		// i expect ofy.put to be called.
 		context.checking(new Expectations() {
 			{
-				oneOf(ofy).put(workStream);
+				oneOf(helper).addWorkStream(workStream);
 			}
 		});
 
@@ -52,14 +59,11 @@ public class JugglServiceImplTest {
 		// Arrange
 		context.checking(new Expectations() {
 			{
-				oneOf(ofy).query(WorkStream.class).fetch();
+				oneOf(helper).getAllWorkStreams();
 			}
 		});
 
 		// Act
-		List<WorkStream> actual = subject.getWorkStreams();
-
-		// Assert
-		assertEquals(0, actual.size());
+		subject.getWorkStreams();
 	}
 }
